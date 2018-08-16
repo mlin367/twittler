@@ -14,7 +14,7 @@
         $body.html('');
 
         //Add a button
-        var $button = $('<button class = "btn">Show More Tweets!</button>');
+        var $button = $('<button class = "btn">Show New Tweets!</button>');
         $button.appendTo($body);
 
         $bodyDiv.appendTo($body);        
@@ -24,12 +24,35 @@
         while(index >= 0){
           var tweet = streams.home[index];
           var $timeStamp = $('<h5></h5>').text(tweet.created_at);
-          var $tweet = $('<div class="tweet">' + '@' + '<span class = "user">' + tweet.user + '</span>' + ': ' + tweet.message + '</div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
+          var $tweet = $('<div class="tweet">' + '@' + '<span class="user">' + tweet.user + '</span>' + ': ' + tweet.message + '</div>');
           $timeStamp.appendTo($tweet);
           $tweet.appendTo($bodyDiv);
           index -= 1;
         }
+        
+        //Array to store new tweets to show
+        var TWEETS = [];
+        setInterval(function(){
+          TWEETS.push(streams.home[streams.home.length - 1]);
+        }, 1000)
+
+        //Function to show the new periodic tweets
+        function showNewTweets(tweetArray){
+          // var newIndex = streams.home.length - 1; 
+          // var tweet = streams.home[newIndex];
+          for(let i = 0; i < tweetArray.length; i++){
+            var $timeStamp = $('<h5></h5>').text(tweetArray[i].created_at);
+          var $tweet = $('<div class="tweet">' + '@' + '<span class="user">' + tweetArray[i].user + '</span>' + ': ' + tweetArray[i].message + '</div>');
+          $timeStamp.appendTo($tweet);
+          $tweet.prependTo($bodyDiv);
+          }
+        }
+        
+        //Make the button actually work and make sure old tweets don't show
+        $button.click(function(){
+          showNewTweets(TWEETS);
+          TWEETS = [];
+        });
 
       });
 
