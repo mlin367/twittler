@@ -29,6 +29,7 @@
           $tweet.appendTo($bodyDiv);
           index -= 1;
         }
+
         
         //Array to store new tweets to show
         var TWEETS = [];
@@ -38,8 +39,6 @@
 
         //Function to show the new periodic tweets
         function showNewTweets(tweetArray){
-          // var newIndex = streams.home.length - 1; 
-          // var tweet = streams.home[newIndex];
           for(let i = 0; i < tweetArray.length; i++){
             var $timeStamp = $('<h5></h5>').text(tweetArray[i].created_at);
           var $tweet = $('<div class="tweet">' + '@' + '<span class="user">' + tweetArray[i].user + '</span>' + ': ' + tweetArray[i].message + '</div>');
@@ -52,6 +51,21 @@
         $button.click(function(){
           showNewTweets(TWEETS);
           TWEETS = [];
+        });
+
+        //Click user to see user timeline
+        $(document).on('click', '.user', function(){
+          $body.html('');
+          var $user = $(event.target).text();
+          var currentUser = streams.users[$user];
+          for(let i = 0; i < currentUser.length; i++){
+            var tweet = currentUser[i];
+            var $timeStamp = $('<h5></h5>').text(tweet.created_at);
+            var $tweet = $('<div class="tweethist">' + '@' + '<span class="hist">' + tweet.user + '</span>' + ': ' + tweet.message + '</div>');
+            $timeStamp.appendTo($tweet);
+            $tweet.prependTo($body);
+          }
+          var $hist = $('<h2 class="histTitle">' + $user + '\'s ' + 'timeline</h2>').prependTo($body);
         });
 
       });
